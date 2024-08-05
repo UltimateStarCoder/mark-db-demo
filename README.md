@@ -1,6 +1,6 @@
-# pt 1: what i did
+# pt 1 op A: building from scratch
 - this is the totorial to get exactly what I have here if you want to make it from scratch, and are using this as a tutorial
-- skip to pt 2: "what u do" if you want to skip the tutorial on how all this was built and just want to run it as is instead of from scratch
+- skip to pt 1 op B: "running from a clone of this" if you want to skip the tutorial on how all this was built and just want to run it as is instead of from scratch
 ## Frontend
 1. create generic app
 `mkdir client`
@@ -21,18 +21,19 @@
 `mkdir backend`
 `cd backend`
 `npm init -y`
-`npm i express pg knex`
+`npm i express pg knex dotenv cors`
 `npx knex init`
-- open the knexfile.js, and change development client from sqlite3 to postgresql?
+- open the knexfile.js, and change the content within `development:{}` to what I have, and add `require('dotenv').config()` to the beginning of the document.
+- It will have an error because `.env` doesn't exist yet, so lets create one with the DB_CONNECTION_STRING I referenced to. `touch .env` and fill it will what mine has
 - add the following line to package.json, to the beginning of `"scripts": {}`
-`"start": "knex migrate:rollback && knex migrate:latest && knex seed:run && node index.js",`
+`"start": "knex migrate:rollback && knex migrate:latest && knex seed:run && node ./app/index.js",`
 2. build the table migrator and seeder
 - make some tables to live on a database
 `npx knex migrate:make some_table_name`
 `npx knex migrate:make another_table`
 - IF your table has starting info (not strictly to be fed by `app.post()`'s), you will need to seed it
 `npx knex seed:make some_table_name` creates the seeder for the first table. we will assume the other table doesn't need seeding
-- lets set up those two recently generated files! In migrations/YYYYMMDDHHMMSS_some_table_name.js add some `exports.up()` and `exports.down()` code. See what I put in _both_ migrations tables. Do a similar thing for seeds/some_table_name.js. *If you use table.increments('some_key_such_as_id') in the migration js, make sure that key is not used in the seeder. For example, I used `table.increments('id')` in the migrations, so I removed `id: #` from `.insert()`.* Fill out the seeder with all of the keys to match the migrations.
+- lets set up those two recently generated files! In migrations/YYYYMMDDHHMMSS_some_table_name.js add some `exports.up()` and `exports.down()` code. See what I put in _both_ migrations tables. Do a similar thing for seeds/some_table_name.js and change the name of the table in `await knex()` to match as well. *If you use table.increments('some_key_such_as_id') in the migration js, make sure that key is not used in the seeder. For example, I used `table.increments('id')` in the migrations, so I removed `id: #` from `.insert()`.* Fill out the seeder with all of the keys to match the migrations.
 3. create an app that will use those tables
 `mkdir app && cd app && touch index.js` 
 - this is where the server will listen. Look at the one I made for an idea on how it should look
@@ -54,9 +55,14 @@
 - localhost:8080 should also be working
 `Ctrl+C` and `docker-compose down` to shut down your servers
 <!-- not done bc backend isn't showing anything -->
-## pt 2: what u do
+# pt 1 op B: running from a clone of this
+this is assuming you don't want to learn how to make this proj on your own. 
+<!-- 1. install dependancies -->
+1. set up your docker
+`docker-compose up --build`
+- check that it is runnings on ports 8080 and 3000
 <!-- stuff to get it working right off the bat -->
-## pt 3: if ur gonna publish
+# pt 2: if ur gonna publish
 - create a .dockerignore and/or .gitignore as applicable. exposing 'secrets' is a big no-no. for example, the username and password to the databases are in clear view inside knexfile.js. If you use hashing, etc. you are gonna want to hide your salt. Also ignore node_modules. Lots to add to the ignore files if you actually publish something. be thorough
 - I also moved the README.md from ./client to ./ and change the content in it from the default react text to this
 - and moved .gitignore so I can push without issues

@@ -5,7 +5,7 @@ services:
     image: postgres
     restart: always
     environment: 
-      # - POSTGRES_HOST=127.0.0.1
+      - POSTGRES_HOST=127.0.0.1
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=docker
       - POSTGRES_DB=my_database
@@ -32,17 +32,18 @@ services:
       db:
         condition: service_healthy
     environment:
-      # - NODE_ENV=development
-      # - DB_CONNECTION_STRING=postgresql://postgres:docker@db:5432/my_database
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_USER=postgres
-      - DB_PASSWORD=docker
-      - DB_NAME=my_database
+      - NODE_ENV=development
+      - DB_CONNECTION_STRING=postgresql://postgres:docker@db:5432/my_database
+      # - DB_HOST=db
+      # - DB_PORT=5432
+      # - DB_USER=postgres
+      # - DB_PASSWORD=docker
+      # - DB_NAME=my_database
     volumes:
       - type: bind
-        source: ./backend/src
-        target: /src/app/src
+        source: ./backend/app
+        target: /app/index
+
   client:
     container_name: client
     build: client/

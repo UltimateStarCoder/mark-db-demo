@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 // Update with your config settings.
 
 /**
@@ -7,9 +9,7 @@ module.exports = {
 
   development: {
     client: 'postgresql',
-    connection: {
-      filename: './dev.sqlite3'
-    }
+    connection: process.env.DB_CONNECTION_STRING
   },
 
   staging: {
