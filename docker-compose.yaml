@@ -42,7 +42,9 @@ services:
     volumes:
       - type: bind
         source: ./backend/app
-        target: /app/index
+        # source wants the dir to where we configured everything
+        target: /app/app/
+        # target wants the dir inside our instance (defn'd in our Dockerfile, where I renamed /backend/ to /app/)
 
   client:
     container_name: client

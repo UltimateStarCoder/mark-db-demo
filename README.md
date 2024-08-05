@@ -21,7 +21,7 @@
 `mkdir backend`
 `cd backend`
 `npm init -y`
-`npm i express pg knex dotenv cors`
+`npm i express pg knex dotenv cors nodemon`
 `npx knex init`
 - open the knexfile.js, and change the content within `development:{}` to what I have, and add `require('dotenv').config()` to the beginning of the document.
 - It will have an error because `.env` doesn't exist yet, so lets create one with the DB_CONNECTION_STRING I referenced to. `touch .env` and fill it will what mine has
