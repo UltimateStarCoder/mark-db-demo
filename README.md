@@ -3,13 +3,12 @@
 - skip to pt 1 op B: "running from a clone of this" if you want to skip the tutorial on how all this was built and just want to run it as is instead of from scratch
 ## Frontend
 1. create generic app
-`mkdir client`
-`cd client`
-`npx create-react-app`
+`npx create-react-app client`
 2. test the app
+`cd client`
 `npm run start` 
 - check port 3000 for the react app.
-- Close it with `Ctrl+C` (click those buttons, don't type them)
+- Close it with `Ctrl+C` (click those buttons, don't type "Ctrl")
 - btw this is the default react app, and will not actually interact with the backend. We just have it to prove that we can have a front end. If you were unable to run the few lines so far, you need to do some debugging first. We will edit the frontend later to interact with the backend
 3. create a Dockerfile
 - not important yet, but it will be a dependancy for part 5 of backend so it can be tested
@@ -17,16 +16,14 @@
 - fill it out similar to the /client/Dockerfile I have
 ## backend
 1. initialize for databases
-`cd ../`
-`mkdir backend`
-`cd backend`
+`cd ../ && mkdir backend && cd backend`
 `npm init -y`
 `npm i express pg knex dotenv cors nodemon`
 `npx knex init`
 - open the knexfile.js, and change the content within `development:{}` to what I have, and add `require('dotenv').config()` to the beginning of the document.
 - It will have an error because `.env` doesn't exist yet, so lets create one with the DB_CONNECTION_STRING I referenced to. `touch .env` and fill it will what mine has
 - add the following line to package.json, to the beginning of `"scripts": {}`
-`"start": "knex migrate:rollback && knex migrate:latest && knex seed:run && node ./app/index.js",`
+`"start": "knex migrate:rollback && knex migrate:latest && knex seed:run && nodemon ./app/index.js",`
 2. build the table migrator and seeder
 - make some tables to live on a database
 `npx knex migrate:make some_table_name`
@@ -35,14 +32,14 @@
 `npx knex seed:make some_table_name` creates the seeder for the first table. we will assume the other table doesn't need seeding
 - lets set up those two recently generated files! In migrations/YYYYMMDDHHMMSS_some_table_name.js add some `exports.up()` and `exports.down()` code. See what I put in _both_ migrations tables. Do a similar thing for seeds/some_table_name.js and change the name of the table in `await knex()` to match as well. *If you use table.increments('some_key_such_as_id') in the migration js, make sure that key is not used in the seeder. For example, I used `table.increments('id')` in the migrations, so I removed `id: #` from `.insert()`.* Fill out the seeder with all of the keys to match the migrations.
 3. create an app that will use those tables
-`mkdir app && cd app && touch index.js` 
+`mkdir app && cd app && touch index.js` and set it up similar to the one I have
 - this is where the server will listen. Look at the one I made for an idea on how it should look
 4. build a docker image
 `cd ../`
 `touch Dockerfile` 
-- fill it using the principles outlined in the doc in my comments there
-`docker build -t tag_aka_name_for_the_image .`
-- (to view of delete images later, use `docker images` and `docker rmi image_name` respectively)
+- fill it using the principles outlined in the doc in my comments there 
+<!-- `docker build -t tag_aka_name_for_the_image .`
+- (to view of delete images later, use `docker images` and `docker rmi image_name` respectively) -->
 5. run docker-compose containers
 `cd ../`
 - you might need to `docker login`, depending on how you have docker set up, otherwise
