@@ -63,3 +63,18 @@ this is assuming you don't want to learn how to make this proj on your own.
 - create a .dockerignore and/or .gitignore as applicable. exposing 'secrets' is a big no-no. for example, the username and password to the databases are in clear view inside knexfile.js. If you use hashing, etc. you are gonna want to hide your salt. Also ignore node_modules. Lots to add to the ignore files if you actually publish something. be thorough
 - I also moved the README.md from ./client to ./ and change the content in it from the default react text to this
 - and moved .gitignore so I can push without issues
+
+
+# if you want to debug in the terminal
+1. find out what docker instance you are on
+`docker ps`
+find the id for the postgres instance. For example, if the instance is bc2b6fea2508, then use enough of the first letter to differenciate between any other instance, such as 'bc'
+2. connect to that backend
+`docker exec -it <id> bash` so for the above example, it would have been `docker exec -it bc bash`
+3. connect to the user
+check the username and password you set up. for this one, I used 'postgres'
+`psql -U postgres`
+4. connect to the database you defined. for this one, I used my_database
+`\c my_database`
+5. to see your databases, use \dt. You can now also use any SQL commands in here
+6. to exit stuff, instead of Ctrl+ C, sometimes it is q or z if in psql
